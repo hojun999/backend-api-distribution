@@ -26,3 +26,15 @@ def get_app_host() -> str:
 
 def get_port() -> int:
     return int(os.getenv("PORT", "8000"))
+
+
+def get_colab_api_key() -> str | None:
+    return os.getenv("COLAB_API_KEY")
+
+
+def get_google_drive_folder_id() -> str | None:
+    return os.getenv("GOOGLE_DRIVE_FOLDER_ID")
+
+
+def get_google_service_account_json() -> str | None:
+    return os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON")
