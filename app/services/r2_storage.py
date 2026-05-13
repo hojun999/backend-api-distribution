@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from io import BytesIO
 from uuid import uuid4
 
 from fastapi import UploadFile
@@ -40,8 +39,8 @@ def upload_ply_to_r2(file: UploadFile, prefix: str) -> R2UploadResult:
         raise RuntimeError("boto3 is not installed. Install project dependencies.") from exc
 
     object_key = _build_object_key(prefix)
-    content = file.file.read()
     try:
+        file.file.seek(0)
         client = boto3.client(
             "s3",
             endpoint_url=f"https://{account_id}.r2.cloudflarestorage.com",
@@ -50,13 +49,15 @@ def upload_ply_to_r2(file: UploadFile, prefix: str) -> R2UploadResult:
             region_name="auto",
         )
         client.upload_fileobj(
-            BytesIO(content),
+            file.file,
             bucket_name,
             object_key,
             ExtraArgs={"ContentType": "application/octet-stream"},
         )
     except Exception as exc:
-        raise RuntimeError("Cloudflare R2 upload failed") from exc
+        raise RuntimeError(
+            f"Cloudflare R2 upload failed: {exc.__class__.__name__}: {exc}"
+        ) from exc
     return R2UploadResult(
         object_key=object_key,
         url=f"{public_base_url.rstrip('/')}/{object_key}",
