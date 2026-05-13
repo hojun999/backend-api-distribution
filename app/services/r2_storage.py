@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import logging
 from uuid import uuid4
 
 from fastapi import UploadFile
@@ -10,6 +11,8 @@ from app.settings import (
     get_r2_public_base_url,
     get_r2_secret_access_key,
 )
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -41,6 +44,12 @@ def upload_ply_to_r2(file: UploadFile, prefix: str) -> R2UploadResult:
     object_key = _build_object_key(prefix)
     try:
         file.file.seek(0)
+        logger.info(
+            "Uploading splat to R2 bucket=%r bucket_len=%s object_key=%s",
+            bucket_name,
+            len(bucket_name),
+            object_key,
+        )
         client = boto3.client(
             "s3",
             endpoint_url=f"https://{account_id}.r2.cloudflarestorage.com",

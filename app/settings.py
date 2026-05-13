@@ -1,4 +1,5 @@
 import os
+import re
 
 from dotenv import load_dotenv
 
@@ -9,8 +10,16 @@ def _getenv_stripped(name: str) -> str | None:
     value = os.getenv(name)
     if value is None:
         return None
-    stripped = value.strip()
+    stripped = value.strip().strip("\"'")
     return stripped or None
+
+
+def _getenv_r2_bucket_name() -> str | None:
+    value = _getenv_stripped("R2_BUCKET_NAME")
+    if value is None:
+        return None
+    cleaned = re.sub(r"[\s\u200b\u200c\u200d\ufeff]+", "", value)
+    return cleaned or None
 
 
 def get_database_url() -> str:
@@ -61,7 +70,7 @@ def get_r2_secret_access_key() -> str | None:
 
 
 def get_r2_bucket_name() -> str | None:
-    return _getenv_stripped("R2_BUCKET_NAME")
+    return _getenv_r2_bucket_name()
 
 
 def get_r2_public_base_url() -> str | None:
