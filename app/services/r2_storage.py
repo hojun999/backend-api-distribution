@@ -57,11 +57,11 @@ def upload_ply_to_r2(file: UploadFile, prefix: str) -> R2UploadResult:
             aws_secret_access_key=secret_access_key,
             region_name="auto",
         )
-        client.upload_fileobj(
-            file.file,
-            bucket_name,
-            object_key,
-            ExtraArgs={"ContentType": "application/octet-stream"},
+        client.put_object(
+            Bucket=bucket_name,
+            Key=object_key,
+            Body=file.file,
+            ContentType="application/octet-stream",
         )
     except Exception as exc:
         raise RuntimeError(
