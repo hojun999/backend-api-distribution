@@ -5,6 +5,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+def _getenv_stripped(name: str) -> str | None:
+    value = os.getenv(name)
+    if value is None:
+        return None
+    stripped = value.strip()
+    return stripped or None
+
+
 def get_database_url() -> str:
     url = os.getenv("DATABASE_URL", "sqlite:///./building_api.db")
     if url.startswith("postgres://"):
@@ -41,20 +49,20 @@ def get_google_service_account_json() -> str | None:
 
 
 def get_r2_account_id() -> str | None:
-    return os.getenv("R2_ACCOUNT_ID")
+    return _getenv_stripped("R2_ACCOUNT_ID")
 
 
 def get_r2_access_key_id() -> str | None:
-    return os.getenv("R2_ACCESS_KEY_ID")
+    return _getenv_stripped("R2_ACCESS_KEY_ID")
 
 
 def get_r2_secret_access_key() -> str | None:
-    return os.getenv("R2_SECRET_ACCESS_KEY")
+    return _getenv_stripped("R2_SECRET_ACCESS_KEY")
 
 
 def get_r2_bucket_name() -> str | None:
-    return os.getenv("R2_BUCKET_NAME")
+    return _getenv_stripped("R2_BUCKET_NAME")
 
 
 def get_r2_public_base_url() -> str | None:
-    return os.getenv("R2_PUBLIC_BASE_URL")
+    return _getenv_stripped("R2_PUBLIC_BASE_URL")
