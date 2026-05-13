@@ -1,4 +1,5 @@
 import json
+import logging
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy.orm import Session
@@ -12,6 +13,7 @@ from app.schemas.splat import DoorSplatResponse, FloorSplatResponse
 from app.services.r2_storage import upload_ply_to_r2
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 @router.post(
@@ -173,6 +175,7 @@ def _upload_or_error(file: UploadFile, prefix: str):
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     except RuntimeError as exc:
+        logger.exception("Splat upload failed for prefix=%s filename=%s", prefix, file.filename)
         raise HTTPException(status_code=503, detail=str(exc)) from exc
 
 
