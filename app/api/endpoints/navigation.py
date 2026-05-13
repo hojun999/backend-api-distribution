@@ -116,4 +116,11 @@ def _floor_graph_response(graph: NavigationGraph) -> FloorGraphResponse:
 
 
 def _load_payload(graph: NavigationGraph) -> GraphPayload:
-    return GraphPayload.model_validate(json.loads(graph.data))
+    return GraphPayload.model_validate(_normalize_legacy_node_types(json.loads(graph.data)))
+
+
+def _normalize_legacy_node_types(data: dict) -> dict:
+    for node in data.get("nodes", []):
+        if node.get("type") == "room":
+            node["type"] = "door"
+    return data

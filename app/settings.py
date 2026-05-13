@@ -38,3 +38,23 @@ def get_google_drive_folder_id() -> str | None:
 
 def get_google_service_account_json() -> str | None:
     return os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON")
+
+
+def get_r2_account_id() -> str | None:
+    return os.getenv("R2_ACCOUNT_ID")
+
+
+def get_r2_access_key_id() -> str | None:
+    return os.getenv("R2_ACCESS_KEY_ID")
+
+
+def get_r2_secret_access_key() -> str | None:
+    return os.getenv("R2_SECRET_ACCESS_KEY")
+
+
+def get_r2_bucket_name() -> str | None:
+    return os.getenv("R2_BUCKET_NAME")
+
+
+def get_r2_public_base_url() -> str | None:
+    return os.getenv("R2_PUBLIC_BASE_URL")
